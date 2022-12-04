@@ -2,6 +2,13 @@
 
 {% block content %}
 <div class="col-md-4 col-md-offset-4">
+    <!-- 3-12-22, Kate: FlashBag messages output starts -->
+    {% for message in app.session.flashbag.get("msg") %}
+        <div class="col-md-12 alert alert-{{ message.class }}" style="margin-top:1rem">
+            {{ message.message|raw }}
+        </div>
+    {% endfor %}
+    <!-- 3-12-22, Kate: FlashBag messages output ends -->
     <h1>Todo List:</h1>
     <table class="table table-striped">
         <th>#</th><th>User</th><th>Description</th><th></th>
