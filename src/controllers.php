@@ -64,7 +64,7 @@ $app->get('/todo/{id}', function ($id) use ($app) {
 })
 ->value('id', null);
 
-
+/* ADD TODO */
 $app->post('/todo/add', function (Request $request) use ($app) {
     if (null === $user = $app['session']->get('user')) {
         return $app->redirect('/login');
@@ -73,8 +73,13 @@ $app->post('/todo/add', function (Request $request) use ($app) {
     $user_id = $user['id'];
     $description = $request->get('description');
 
-    $sql = "INSERT INTO todos (user_id, description) VALUES ('$user_id', '$description')";
-    $app['db']->executeUpdate($sql);
+    // 3-12-22, Kate: TASK-1: fix for empty description on add todo
+    if($description != ''){
+        $sql = "INSERT INTO todos (user_id, description) VALUES ('$user_id', '$description')";
+        $app['db']->executeUpdate($sql);
+    }else{
+        //die('no description'); 
+    }
 
     return $app->redirect('/todo');
 });
