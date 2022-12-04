@@ -76,19 +76,33 @@ $app->post('/todo/add', function (Request $request) use ($app) {
     // 3-12-22, Kate: TASK-1: fix for empty description on add todo
     if($description != ''){
         $sql = "INSERT INTO todos (user_id, description) VALUES ('$user_id', '$description')";
-        $app['db']->executeUpdate($sql);
+        // 3-12-22, Kate: TASK-4: Added confirmation message when added TODO
+        if($app['db']->executeUpdate($sql)){
+            $app['session']->getFlashBag()->add(
+                    "msg", ["class" => "success", "message" => "Yay! You added new TODO!"]
+            );
+        }
     }else{
-        //die('no description'); 
+        // 3-12-22, Kate: TASK-4: Added error message when no description
+        $app['session']->getFlashBag()->add(
+            "msg", ["class" => "danger", "message" => "Please set description before adding TODO ^___^"]
+        );
     }
 
     return $app->redirect('/todo');
 });
 
-
+/* DELETE TODO */
 $app->match('/todo/delete/{id}', function ($id) use ($app) {
 
     $sql = "DELETE FROM todos WHERE id = '$id'";
-    $app['db']->executeUpdate($sql);
+    
+    // 3-12-22, Kate: TASK-4: Added confirmation message when TODO is deleted
+    if($app['db']->executeUpdate($sql)){
+        $app['session']->getFlashBag()->add(
+                    "msg", ["class" => "info", "message" => "Hooray! TODO deleted successfully!"]
+        );
+    }
 
     return $app->redirect('/todo');
 });
