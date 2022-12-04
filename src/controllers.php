@@ -106,3 +106,37 @@ $app->match('/todo/delete/{id}', function ($id) use ($app) {
 
     return $app->redirect('/todo');
 });
+
+/* SET COMPLETED STATUS */
+$app->match('/todo/set_completed/{id}', function ($id) use ($app) {
+
+    // select clicked TODO to get current completed status
+    $sql1 = "SELECT completed FROM todos WHERE id = '$id'";
+    $todoToUpdate = $app['db']->fetchAssoc($sql1);
+
+    $todo_completed_current = $todoToUpdate['completed'];
+
+    $todo_completed_to_set = 'N';
+    if($todo_completed_current == 'Y'){
+        $todo_completed_to_set = 'N';
+    }else{
+        $todo_completed_to_set = 'Y';
+    }
+
+    //update completed staus
+    $sql2 = "UPDATE todos SET completed = '$todo_completed_to_set' WHERE id = '$id'";
+
+    if($app['db']->executeUpdate($sql2)){
+        if($todo_completed_to_set == 'Y'){
+            $app['session']->getFlashBag()->add(
+                        "msg", ["class" => "success", "message" => "Geronimo! TODO #".$id." has being completed!"]
+            );
+        }else{
+             $app['session']->getFlashBag()->add(
+                        "msg", ["class" => "info", "message" => "TODO #".$id." is to be continued..."]
+            );
+        }
+    }
+
+    return $app->redirect('/todo');
+});
