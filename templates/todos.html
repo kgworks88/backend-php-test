@@ -1,27 +1,49 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="col-md-4 col-md-offset-4">
+
+<div class="col-md-5 col-md-offset-4">
     <!-- 3-12-22, Kate: FlashBag messages output starts -->
     {% for message in app.session.flashbag.get("msg") %}
-        <div class="col-md-12 alert alert-{{ message.class }}" style="margin-top:1rem">
+        <div class="col-md-12 alert alert-{{ message.class }} fade in" role="alert" style="margin-top:1rem;">
             {{ message.message|raw }}
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
         </div>
     {% endfor %}
     <!-- 3-12-22, Kate: FlashBag messages output ends -->
     <h1>Todo List:</h1>
     <table class="table table-striped">
-        <th>#</th><th>User</th><th>Description</th><th></th>
+        <th class="center">#</th>
+        <th class="center">User</th>
+        <th class="center">Description</th>
+        <!-- 4-12-22, Kate, Task-2: new <th> -->
+        <th class="center">Completed</th>
+        <th class="center"><span class="glyphicon glyphicon glyphicon-trash"></span></th>
         {% for todo in todos %}
             <tr>
-                <td>{{ todo.id }}</td>
-                <td>{{ todo.user_id }}</td>
-                <td>
+                <td class="center">{{ todo.id }}</td>
+                <td class="center">{{ todo.user_id }}</td>
+                <td class="center">
                     <a href="{{ app.request.baseurl }}/todo/{{ todo.id }}">
                        {{ todo.description }}
                     </a>
                 </td>
-                <td>
+                <!-- 4-12-22, Kate, Task-2: new table column for 'completed' starts -->
+                <td class="center">
+                    <form method="post" action="{{ app.request.baseurl }}/todo/set_completed/{{ todo.id }}">
+                        {% if todo.completed == 'Y' %}
+                           <button type="submit" class="btn btn-xs btn-success">
+                             <span class="glyphicon glyphicon-ok glyphicon-white"></span>
+                           </button> 
+                        {% else %}
+                           <button type="submit" class="btn btn-xs btn-light">
+                             <span class="glyphicon glyphicon-white">&nbsp;</span>
+                           </button>
+                        {% endif %}        
+                    </form>
+                </td>
+                <!-- 4-12-22, Kate, Task-2: new table column for 'completed' ends -->
+                <td class="center">
                     <form method="post" action="{{ app.request.baseurl }}/todo/delete/{{ todo.id }}">
                         <button type="submit" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-remove glyphicon-white"></span></button>
                     </form>
