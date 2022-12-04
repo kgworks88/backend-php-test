@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<div class="col-md-5 col-md-offset-4">
+<div class="col-md-6 col-md-offset-3">
     <!-- 3-12-22, Kate: FlashBag messages output starts -->
     {% for message in app.session.flashbag.get("msg") %}
         <div class="col-md-12 alert alert-{{ message.class }} fade in" role="alert" style="margin-top:1rem;">
@@ -18,6 +18,7 @@
         <th class="center">Description</th>
         <!-- 4-12-22, Kate, Task-2: new <th> -->
         <th class="center">Completed</th>
+        <th class="center">JSON VIEW</th>
         <th class="center"><span class="glyphicon glyphicon glyphicon-trash"></span></th>
         {% for todo in todos %}
             <tr>
@@ -43,6 +44,15 @@
                     </form>
                 </td>
                 <!-- 4-12-22, Kate, Task-2: new table column for 'completed' ends -->
+                <!-- 4-12-22, Kate, Task-3: JSON View starts -->
+                <td class="center">
+                    <form method="post" action="{{ app.request.baseurl }}/todo/view_in_json/{{ todo.id }}">
+                           <button type="submit" class="btn btn-xs btn-light">
+                             <span class="glyphicon glyphicon-white">JSON</span>
+                           </button>      
+                    </form>  
+                </td>
+                <!-- 4-12-22, Kate, Task-3: JSON View ends -->
                 <td class="center">
                     <form method="post" action="{{ app.request.baseurl }}/todo/delete/{{ todo.id }}">
                         <button type="submit" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-remove glyphicon-white"></span></button>
