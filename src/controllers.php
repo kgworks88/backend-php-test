@@ -107,7 +107,7 @@ $app->match('/todo/delete/{id}', function ($id) use ($app) {
     return $app->redirect('/todo');
 });
 
-/* SET COMPLETED STATUS */
+/* 4-12-22, Kate, TASK-2: SET COMPLETED STATUS */
 $app->match('/todo/set_completed/{id}', function ($id) use ($app) {
 
     // select clicked TODO to get current completed status
@@ -138,5 +138,20 @@ $app->match('/todo/set_completed/{id}', function ($id) use ($app) {
         }
     }
 
+    return $app->redirect('/todo');
+});
+
+/* 4-12-22, Kate, TASK-3: VIEW IN JSON */
+$app->match('/todo/view_in_json/{id}', function ($id) use ($app) {
+
+    // select clicked TODO to get current completed status
+    $sql1 = "SELECT * FROM todos WHERE id = '$id'";
+    $todoToView = $app['db']->fetchAssoc($sql1);
+
+    $app['session']->getFlashBag()->add(
+        "msg", ["class" => "info", "message" => "/todo/".$id."/json => ".json_encode($todoToView)]
+    );
+       
+  
     return $app->redirect('/todo');
 });
